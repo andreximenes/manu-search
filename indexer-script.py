@@ -22,8 +22,8 @@ def extract_page_text(path):
     print(pages)
     return pages
 
-# TODO: tentar indexar pagina a pagina ao inves de objeto unico.
 
+# Indexando pagina a pagina
 for root, dirs, files in os.walk(os.path.abspath(DOCS_PATH)):
     for file in files:
         pages = extract_page_text(os.path.join(root, file),)
@@ -72,24 +72,22 @@ GET _search
 
 
 
-GET documents/_search 
-{
-  "fields": [
-    {
-      "field": "file-name"
-    },
-    {
-      "field": "file-path"
-    }
-  ],
-  "_source": "file-name",
-  "query": 
-    { "bool" :
-        {
-         "must": [
-           {"match_phrase":{"content": "lebanese" }}
-         ]
-        } 
-    } 
-}
+GET documents-pages/_search 
+  {
+    "query": 
+      { "bool" :
+          {
+           "should": [
+             {"match_phrase":{"content": "critically examine" }},
+             {"match_phrase":{"content": "Vegan" }}
+           ]
+          } 
+      },
+      "fields": [
+        "file-name",
+        "file-path",
+        "page-number"
+      ],
+      "_source": false
+  }
 """
